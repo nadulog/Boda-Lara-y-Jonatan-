@@ -17,7 +17,7 @@
 <meta name="theme-color" content="#4a5232">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Playfair+Display:wght@500&family=Great+Vibes&display=swap" rel="stylesheet">
 <style>
   :root {
     --ink: #2f3418;
@@ -300,6 +300,19 @@
     to   { opacity: 1; transform: translateX(-50%) translateY(0); }
   }
 
+  /* Versículo en letra cursiva, debajo de la cita del cordón */
+  .versiculo {
+    position: absolute;
+    left: 6%; right: 6%;
+    top: 62%;
+    text-align: center;
+    line-height: 1.3;
+    font-family: "Great Vibes", cursive;
+    font-size: 6.6cqw;
+    color: #f3ead2;
+    text-shadow: 0 0 1.5cqw rgba(40,42,20,.35);
+  }
+
   /* Luz que recorre el cordón: brillo enmascarado con la forma exacta del cordón de la pieza */
   .cordon-luz {
     position: absolute;
@@ -440,6 +453,7 @@
   <section class="pieza">
     <img src="assets/03-versiculo.jpg" alt="Eclesiastés 4:12" loading="lazy">
     <div class="cordon-luz" aria-hidden="true"><span></span></div>
+    <p class="versiculo">Uno solo puede ser vencido,<br>pero dos pueden resistir:<br>cordón de tres dobleces<br>no se rompe fácilmente.</p>
   </section>
 
   <!-- 4. Día y cuenta regresiva -->
