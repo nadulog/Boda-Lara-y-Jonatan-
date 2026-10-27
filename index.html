@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lara &amp; Jonatan</title>
+<meta name="description" content="Lara & Jonatan · 19 de diciembre de 2026 · ¡Nos casamos!">
+<meta property="og:title" content="Lara & Jonatan · Nos casamos">
+<meta property="og:description" content="19 de diciembre de 2026">
+<meta property="og:image" content="assets/01-portada.jpg">
+<meta name="theme-color" content="#4a5232">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #2f3418;
+    --olive: #4a5232;
+    --paper: #f1ebdf;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--olive);
+    font-family: "Cormorant Garamond", Georgia, serif;
+    color: var(--ink);
+  }
+  main {
+    max-width: 480px;
+    margin: 0 auto;
+    background: var(--paper);
+    box-shadow: 0 0 40px rgba(0,0,0,.25);
+    overflow: hidden;
+  }
+
+  /* Cada pieza: imagen a ancho completo + capa de elementos posicionados en % */
+  .pieza {
+    position: relative;
+    container-type: inline-size;
+    line-height: 0;
+  }
+  .pieza > img { width: 100%; height: auto; display: block; }
+  .hot {
+    position: absolute;
+    display: block;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    -webkit-tap-highlight-color: transparent;
+    border-radius: 2px;
+    transition: background .2s;
+  }
+  .hot:active { background: rgba(47,52,24,.12); }
+
+  /* Invitados */
+  .inv-nombre {
+    position: absolute;
+    left: 8%; right: 8%;
+    top: 40%; height: 18%;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    line-height: 1.1;
+    font-style: italic;
+    font-size: 9.5cqw;
+    color: var(--ink);
+  }
+  .inv-pases {
+    position: absolute;
+    left: 28.9%; width: 11.6%;
+    top: 61.2%; height: 5%;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+    font-family: "Playfair Display", Georgia, serif;
+    font-variant-numeric: lining-nums;
+    font-size: 6.8cqw;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  /* En la imagen singular ("lugar reservado") la línea está recentrada: el hueco se corre 34px */
+  .inv-pases.guest-places--singular { left: 32.5%; }
+
+  /* Cuenta regresiva */
+  .cd {
+    position: absolute;
+    top: 78.6%; height: 7%;
+    width: 18%;
+    transform: translateX(-50%);
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+    font-size: 8.2cqw;
+    font-weight: 500;
+    color: var(--ink);
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  /* Galería de fotos (entre música y bloomkeep): degradé del verde de música al de bloomkeep */
+  .galeria {
+    position: relative;
+    container-type: inline-size;
+    overflow: hidden;
+    margin-top: -1px;
+    padding: 12cqw 7cqw 14cqw;
+    /* papel verde de la pieza de música; el degradé lo aclara hacia abajo hasta el tono de bloomkeep */
+    background:
+      linear-gradient(to bottom, rgba(120,122,80,0), rgba(120,122,80,.2)),
+      url("assets/fondo-verde.jpg") top center / 100% auto repeat-y;
+  }
+  .galeria + .pieza { margin-top: -1px; }
+  .galeria h2 {
+    text-align: center;
+    font-weight: 400;
+    font-size: 4.2cqw;
+    letter-spacing: .32em;
+    text-indent: .32em;
+    color: #efe7d6;
+    margin-bottom: 9cqw;
+  }
+  .foto {
+    background: #efe8da;
+    padding: 2.6cqw 2.6cqw 2.6cqw;
+    box-shadow: 0 3cqw 6cqw rgba(0,0,0,.35);
+    line-height: 0;
+  }
+  .foto img { width: 100%; height: auto; display: block; }
+  .foto.izq { transform: rotate(-2deg); margin: 0 4cqw 0 0; }
+  .foto.der { transform: rotate(1.8deg); margin: 0 0 0 4cqw; }
+  .par {
+    display: flex; gap: 5cqw;
+    margin: 9cqw 0;
+  }
+  .par .foto { flex: 1; }
+  .par .foto:first-child { transform: rotate(1.5deg); }
+  .par .foto:last-child  { transform: rotate(-1.5deg); margin-top: 6cqw; }
+  .foto { cursor: zoom-in; -webkit-tap-highlight-color: transparent; }
+
+  /* Ramitos de flores (PNG con fondo transparente en assets/flores-*.png) */
+  .ramo {
+    position: absolute;
+    z-index: 3;
+    pointer-events: none;
+    height: auto;
+    filter: drop-shadow(0 1cqw 1.2cqw rgba(0,0,0,.35));
+  }
+  /* Cada ramo viene cortado contra dos bordes: va en la esquina que coincide con ese corte */
+  .ramo.r1 { top: 0;    right: 0; width: 44cqw; }
+  .ramo.r2 { bottom: 0; right: 0; width: 42cqw; }
+  .ramo.r3 { bottom: 0; left: 0;  width: 38cqw; }
+
+  /* Visor de fotos en grande */
+  .visor {
+    position: fixed; inset: 0;
+    z-index: 70;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(20,22,13,.94);
+    opacity: 0; visibility: hidden;
+    transition: opacity .3s, visibility .3s;
+    touch-action: pan-y;
+  }
+  .visor.abierto { opacity: 1; visibility: visible; }
+  .visor img {
+    max-width: calc(100vw - 32px);
+    max-height: calc(100dvh - 120px);
+    object-fit: contain;
+    border: 6px solid #efe8da;
+    box-shadow: 0 20px 50px rgba(0,0,0,.5);
+  }
+  .visor button {
+    position: absolute;
+    background: none; border: 0;
+    color: #efe8da;
+    font-family: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .visor .cerrar { top: max(12px, env(safe-area-inset-top)); right: 12px; font-size: 40px; line-height: 1; padding: 6px 12px; }
+  .visor .ant, .visor .sig { top: 50%; transform: translateY(-50%); font-size: 46px; padding: 16px 10px; opacity: .85; }
+  .visor .ant { left: 2px; }
+  .visor .sig { right: 2px; }
+  .visor .contador {
+    position: absolute; bottom: max(20px, env(safe-area-inset-bottom));
+    left: 0; right: 0; text-align: center;
+    color: #efe8da; font-size: 16px; letter-spacing: .3em;
+  }
+
+  /* Intro: pantalla completa con la imagen cubriendo el viewport (los botones quedan al centro) */
+  .intro {
+    position: fixed; inset: 0;
+    z-index: 80;
+    overflow: hidden;
+    background: #5d6440;
+    transition: opacity .8s ease, visibility .8s;
+  }
+  .intro.oculta { opacity: 0; visibility: hidden; }
+  .intro .lienzo {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: max(100vw, calc(100dvh * 941 / 1672));
+    aspect-ratio: 941 / 1672;
+    transform: translate(-50%, -50%);
+    line-height: 0;
+  }
+  .intro .lienzo img { width: 100%; height: 100%; display: block; }
+  body.con-intro { overflow: hidden; }
+
+  /* Botón flotante de música */
+  .btn-musica {
+    position: fixed;
+    right: max(16px, calc(50vw - 240px + 16px));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    z-index: 40;
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba(239,231,214,.7);
+    background: rgba(74,82,50,.85);
+    color: #efe7d6;
+    font-size: 22px; line-height: 1;
+    display: none; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0,0,0,.3);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-musica.visible { display: flex; }
+  .btn-musica.pausada { opacity: .6; text-decoration: line-through; }
+
+  /* Modal regalos */
+  .modal {
+    position: fixed; inset: 0;
+    z-index: 50;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px 16px;
+    background: rgba(28,30,18,.72);
+    opacity: 0; visibility: hidden;
+    transition: opacity .3s, visibility .3s;
+  }
+  .modal.abierto { opacity: 1; visibility: visible; }
+  .modal .tarjeta {
+    position: relative;
+    width: min(100%, 380px, calc((100dvh - 48px) * 718 / 1164));
+    line-height: 0;
+    transform: translateY(16px) scale(.97);
+    transition: transform .35s ease;
+    box-shadow: 0 20px 50px rgba(0,0,0,.45);
+  }
+  .modal.abierto .tarjeta { transform: none; }
+  .modal .tarjeta img { width: 100%; display: block; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 32px;
+    z-index: 60;
+    transform: translate(-50%, 20px);
+    background: var(--ink); color: var(--paper);
+    padding: 10px 20px;
+    font-size: 17px; letter-spacing: .08em;
+    border-radius: 2px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .25s, transform .25s;
+  }
+  .toast.visible { opacity: 1; transform: translate(-50%, 0); }
+
+  /* Piezas pegadas: cada una se monta 1px sobre la anterior para que no aparezca línea de corte */
+  .pieza + .pieza { margin-top: -1px; }
+
+  /* Franja borrosa sobre la unión portada → invitados para disimular el desfasaje */
+  .funde::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    top: -7cqw; height: 14cqw;
+    z-index: 2;
+    pointer-events: none;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 40%, #000 60%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 40%, #000 60%, transparent);
+  }
+</style>
+</head>
+<body class="con-intro">
+
+<!-- Intro -->
+<div class="intro" id="intro">
+  <div class="lienzo">
+    <img src="assets/00-intro.jpg" alt="Lara & Jonatan">
+    <button class="hot" id="entrarConMusica" aria-label="Entrar con música"
+       style="left:19.2%; top:51.1%; width:61.6%; height:5.6%"></button>
+    <button class="hot" id="entrarSinMusica" aria-label="Entrar sin música"
+       style="left:19.2%; top:58.8%; width:61.6%; height:5.6%"></button>
+  </div>
+</div>
+
+<audio id="musica" src="assets/musica.mp3" loop preload="auto"></audio>
+<button class="btn-musica" id="btnMusica" aria-label="Pausar música">&#9835;</button>
+
+<main>
+
+  <!-- 1. Portada -->
+  <section class="pieza">
+    <img src="assets/01-portada.jpg" alt="Lara & Jonatan · 19 de diciembre de 2026 · Nos casamos">
+  </section>
+
+  <!-- 2. Invitados -->
+  <section class="pieza funde">
+    <img id="img-invitados" src="assets/02-invitados.jpg" alt="Esta invitación fue creada especialmente para vos. Tenés lugares reservados">
+    <div class="inv-nombre" id="nombres-invitados"></div>
+    <div class="inv-pases" id="cantidad-lugares"></div>
+  </section>
+
+  <!-- 3. Versículo -->
+  <section class="pieza">
+    <img src="assets/03-versiculo.jpg" alt="Eclesiastés 4:12" loading="lazy">
+  </section>
+
+  <!-- 4. Día y cuenta regresiva -->
+  <section class="pieza">
+    <img src="assets/04-fecha.jpg" alt="Sábado 19 de diciembre de 2026" loading="lazy">
+    <div class="cd" style="left:20.9%" id="cdDias">0</div>
+    <div class="cd" style="left:40.1%" id="cdHoras">0</div>
+    <div class="cd" style="left:59.8%" id="cdMin">0</div>
+    <div class="cd" style="left:79.2%" id="cdSeg">0</div>
+  </section>
+
+  <!-- 5. Ceremonia -->
+  <section class="pieza">
+    <img src="assets/05-ceremonia.jpg" alt="Ceremonia · Iglesia del Reencuentro · Colón 3668, Rafael Calzada · 19:30 hs" loading="lazy">
+    <a class="hot" data-link="ceremonia" target="_blank" rel="noopener" aria-label="Cómo llegar a la ceremonia"
+       style="left:23.8%; top:70.9%; width:52.4%; height:5.7%"></a>
+  </section>
+
+  <!-- 6. Celebración -->
+  <section class="pieza">
+    <img src="assets/06-celebracion.jpg" alt="Celebración · Trebelno · 21:00 hs · Av. Hipólito Yrigoyen 14032, Burzaco" loading="lazy">
+    <a class="hot" data-link="celebracion" target="_blank" rel="noopener" aria-label="Cómo llegar a la celebración"
+       style="left:27.1%; top:66.5%; width:45.9%; height:5.9%"></a>
+  </section>
+
+  <!-- 7. Dress code -->
+  <section class="pieza">
+    <img src="assets/07-dresscode.jpg" alt="Dress code: Elegante" loading="lazy">
+  </section>
+
+  <!-- 8. Música -->
+  <section class="pieza">
+    <img src="assets/08-musica.jpg" alt="Música · ¿Qué canción no puede faltar?" loading="lazy">
+    <a class="hot" data-link="musica" target="_blank" rel="noopener" aria-label="Sugerir canción"
+       style="left:18.8%; top:63.4%; width:62.5%; height:6.7%"></a>
+  </section>
+
+  <!-- Fotos de la pareja -->
+  <section class="galeria">
+    <h2>NOSOTROS</h2>
+    <div class="foto izq"><img src="assets/foto-1.jpg" alt="Lara y Jonatan caminando por las vías" loading="lazy"></div>
+    <div class="par">
+      <div class="foto"><img src="assets/foto-3.jpg" alt="Lara y Jonatan besándose en el sendero" loading="lazy"></div>
+      <div class="foto"><img src="assets/foto-4.jpg" alt="Lara y Jonatan junto a un árbol" loading="lazy"></div>
+    </div>
+    <div class="foto der"><img src="assets/foto-2.jpg" alt="Lara y Jonatan en el bosque" loading="lazy"></div>
+    <img class="ramo r1" src="assets/flores-1.png" alt="" aria-hidden="true" onerror="this.remove()">
+    <img class="ramo r2" src="assets/flores-2.png" alt="" aria-hidden="true" onerror="this.remove()">
+    <img class="ramo r3" src="assets/flores-3.png" alt="" aria-hidden="true" onerror="this.remove()">
+  </section>
+
+  <!-- 9. Bloomkeep -->
+  <section class="pieza">
+    <img src="assets/09-bloomkeep.jpg" alt="Bloomkeep · Tu mirada también forma parte de nuestra historia" loading="lazy">
+    <a class="hot" data-link="bloomkeep" target="_blank" rel="noopener" aria-label="Compartir fotos"
+       style="left:26.2%; top:87.7%; width:47.4%; height:4.8%"></a>
+  </section>
+
+  <!-- 10. Regalos -->
+  <section class="pieza">
+    <img src="assets/10-regalos.jpg" alt="Regalos · Tu presencia es nuestro mejor regalo" loading="lazy">
+    <button class="hot" id="abrirRegalos" aria-label="Ver datos para transferencia"
+       style="left:33%; top:47.4%; width:34%; height:5%"></button>
+  </section>
+
+  <!-- 11. Confirmación de asistencia -->
+  <section class="pieza">
+    <img src="assets/11-confirmacion.jpg" alt="¿Nos acompañás?" loading="lazy">
+    <a class="hot" id="boton-confirmar" data-link="rsvp" target="_blank" rel="noopener" aria-label="Confirmar asistencia"
+       style="left:20.6%; top:79.4%; width:58.8%; height:5.7%"></a>
+  </section>
+
+  <!-- Footer -->
+  <footer class="pieza">
+    <img src="assets/12-footer.jpg" alt="Hecho con amor por Bloomday" loading="lazy">
+    <a class="hot" data-link="whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp Bloomday"
+       style="left:41.8%; top:50%; width:4.8%; height:18%"></a>
+    <a class="hot" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram Bloomday"
+       style="left:47.7%; top:50%; width:4.8%; height:18%"></a>
+    <a class="hot" data-link="web" target="_blank" rel="noopener" aria-label="Web Bloomday"
+       style="left:53.7%; top:50%; width:4.8%; height:18%"></a>
+  </footer>
+
+</main>
+
+<!-- Modal datos de transferencia -->
+<div class="modal" id="modalRegalos" role="dialog" aria-modal="true" aria-label="Datos para transferencia">
+  <div class="tarjeta">
+    <img src="assets/10-regalos-modal.jpg" alt="Titular: De los Santos Jonatan. Alias: Boda.filipenses413. CBU: 0070715430004002514333. CUIL: 20-38079400-5. N.º de cuenta: 400251437153.">
+    <button class="hot" id="cerrarRegalos" aria-label="Cerrar"
+       style="left:87%; top:2%; width:11%; height:7%"></button>
+    <button class="hot" id="copiarAlias" aria-label="Copiar alias"
+       style="left:10.7%; top:86.3%; width:78.7%; height:7.8%"></button>
+  </div>
+</div>
+<div class="toast" id="toast">Alias copiado</div>
+
+<!-- Visor de fotos -->
+<div class="visor" id="visor" role="dialog" aria-modal="true" aria-label="Foto en grande">
+  <img id="visorImg" alt="">
+  <button class="cerrar" id="visorCerrar" aria-label="Cerrar">&times;</button>
+  <button class="ant" id="visorAnt" aria-label="Foto anterior">&#8249;</button>
+  <button class="sig" id="visorSig" aria-label="Foto siguiente">&#8250;</button>
+  <div class="contador" id="visorCont"></div>
+</div>
+
+<script>
+  // ===== Configuración =====
+  const EVENTO = new Date('2026-12-19T19:30:00-03:00');
+  const ALIAS = 'Boda.filipenses413';
+  const LINKS = {
+    ceremonia:   'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Iglesia del Reencuentro, Colón 3668, Rafael Calzada'),
+    celebracion: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Trebelno, Av. Hipólito Yrigoyen 14032, Burzaco'),
+    musica:      'https://open.spotify.com/playlist/33gY95I8ZwTGIs8Xq97PP7',
+    bloomkeep:   'https://app.bloomkeep.site/boda-lara-jonatan',
+    rsvp:        '#',  // se reemplaza por el link personalizado cuando llega ?invite=<token>
+    whatsapp:    '#',  // TODO: WhatsApp Bloomday
+    instagram:   '#',  // TODO: Instagram Bloomday
+    web:         '#'   // TODO: web Bloomday
+  };
+
+  document.querySelectorAll('[data-link]').forEach(a => {
+    a.href = LINKS[a.dataset.link] || '#';
+  });
+
+
+  // ===== Cuenta regresiva =====
+  const cd = {
+    d: document.getElementById('cdDias'),
+    h: document.getElementById('cdHoras'),
+    m: document.getElementById('cdMin'),
+    s: document.getElementById('cdSeg')
+  };
+  function tick() {
+    let diff = Math.max(0, EVENTO - Date.now()) / 1000;
+    const d = Math.floor(diff / 86400); diff -= d * 86400;
+    const h = Math.floor(diff / 3600);  diff -= h * 3600;
+    const m = Math.floor(diff / 60);
+    const s = Math.floor(diff - m * 60);
+    cd.d.textContent = d;
+    cd.h.textContent = String(h).padStart(2, '0');
+    cd.m.textContent = String(m).padStart(2, '0');
+    cd.s.textContent = String(s).padStart(2, '0');
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // ===== Modal regalos =====
+  const modal = document.getElementById('modalRegalos');
+  const toast = document.getElementById('toast');
+  const abrir = () => { modal.classList.add('abierto'); document.body.style.overflow = 'hidden'; };
+  const cerrar = () => { modal.classList.remove('abierto'); document.body.style.overflow = ''; };
+  document.getElementById('abrirRegalos').addEventListener('click', abrir);
+  document.getElementById('cerrarRegalos').addEventListener('click', cerrar);
+  modal.addEventListener('click', e => { if (e.target === modal) cerrar(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { cerrar(); cerrarVisor(); }
+    if (!visor.classList.contains('abierto')) return;
+    if (e.key === 'ArrowLeft') mostrar(actual - 1);
+    if (e.key === 'ArrowRight') mostrar(actual + 1);
+  });
+
+  document.getElementById('copiarAlias').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(ALIAS);
+    } catch {
+      const t = document.createElement('textarea');
+      t.value = ALIAS; document.body.appendChild(t); t.select();
+      try { document.execCommand('copy'); } catch {}
+      t.remove();
+    }
+    toast.classList.add('visible');
+    setTimeout(() => toast.classList.remove('visible'), 1800);
+  });
+
+  // ===== Intro y música =====
+  const intro = document.getElementById('intro');
+  const audio = document.getElementById('musica');
+  const btnMusica = document.getElementById('btnMusica');
+  function entrar(conMusica) {
+    intro.classList.add('oculta');
+    document.body.classList.remove('con-intro');
+    window.scrollTo(0, 0);
+    if (conMusica) {
+      audio.play().then(() => btnMusica.classList.add('visible')).catch(() => {});
+    }
+  }
+  document.getElementById('entrarConMusica').addEventListener('click', () => entrar(true));
+  document.getElementById('entrarSinMusica').addEventListener('click', () => entrar(false));
+  btnMusica.addEventListener('click', () => {
+    if (audio.paused) audio.play(); else audio.pause();
+  });
+  audio.addEventListener('play', () => { btnMusica.classList.remove('pausada'); btnMusica.setAttribute('aria-label', 'Pausar música'); });
+  audio.addEventListener('pause', () => { btnMusica.classList.add('pausada'); btnMusica.setAttribute('aria-label', 'Reproducir música'); });
+  // si el celular se bloquea o cambia de app, pausar
+  document.addEventListener('visibilitychange', () => { if (document.hidden && !audio.paused) audio.pause(); });
+
+  // ===== Visor de fotos de la galería =====
+  const visor = document.getElementById('visor');
+  const visorImg = document.getElementById('visorImg');
+  const visorCont = document.getElementById('visorCont');
+  const fotos = [...document.querySelectorAll('.galeria .foto img')];
+  let actual = 0;
+  function mostrar(i) {
+    actual = (i + fotos.length) % fotos.length;
+    visorImg.src = fotos[actual].src;
+    visorImg.alt = fotos[actual].alt;
+    visorCont.textContent = (actual + 1) + ' / ' + fotos.length;
+  }
+  function cerrarVisor() {
+    if (!visor.classList.contains('abierto')) return;
+    visor.classList.remove('abierto');
+    document.body.style.overflow = '';
+  }
+  fotos.forEach((img, i) => img.parentElement.addEventListener('click', () => {
+    mostrar(i);
+    visor.classList.add('abierto');
+    document.body.style.overflow = 'hidden';
+  }));
+  document.getElementById('visorCerrar').addEventListener('click', cerrarVisor);
+  document.getElementById('visorAnt').addEventListener('click', () => mostrar(actual - 1));
+  document.getElementById('visorSig').addEventListener('click', () => mostrar(actual + 1));
+  visor.addEventListener('click', e => { if (e.target === visor) cerrarVisor(); });
+  let toqueX = null;
+  visor.addEventListener('touchstart', e => { toqueX = e.touches[0].clientX; }, { passive: true });
+  visor.addEventListener('touchend', e => {
+    if (toqueX === null) return;
+    const dx = e.changedTouches[0].clientX - toqueX;
+    if (Math.abs(dx) > 45) mostrar(actual + (dx < 0 ? 1 : -1));
+    toqueX = null;
+  });
+
+</script>
+
+<!-- Personalización de invitados por token (?invite=<token>) -->
+<script>
+(function () {
+  var SUPABASE_URL = "https://fotugzhxlajyjdnjteld.supabase.co";
+  var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdHVnemh4bGFqeWpkbmp0ZWxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUyNDY2MzAsImV4cCI6MjA4MDgyMjYzMH0.GnEzF-iJuiZJH5IVUgszWOq5qv4AeHfFf8Y3_YRW5FA";
+  var RSVP_BASE = "https://bloomdate-rsvp.netlify.app";
+
+  function formatNames(names) {
+    if (names.length === 1) return names[0];
+    return names.slice(0, -1).join(", ") + " y " + names[names.length - 1];
+  }
+
+  async function initInvitation() {
+    var token = new URLSearchParams(window.location.search).get("invite");
+    if (!token) return;
+
+    try {
+      var response = await fetch(SUPABASE_URL + "/rest/v1/rpc/get_invite_by_token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": "Bearer " + SUPABASE_ANON_KEY
+        },
+        body: JSON.stringify({ p_token: token })
+      });
+
+      if (!response.ok) return;
+      var rows = await response.json();
+      var invite = rows && rows[0];
+      if (!invite) return;
+
+      var companions = invite.companions || [];
+      var names = [invite.first_name].concat(
+        companions.map(function (companion) { return companion.first_name; })
+      ).filter(Boolean);
+      if (!names.length) return;
+
+      var namesEl = document.getElementById("nombres-invitados");
+      if (namesEl) namesEl.textContent = formatNames(names);
+
+      // La frase "Tenés ___ lugares reservados" está impresa en la imagen: acá solo va el número.
+      // Con 1 lugar se usa la versión singular de la imagen ("lugar reservado").
+      var totalPasses = 1 + companions.length;
+      var passesEl = document.getElementById("cantidad-lugares");
+      if (passesEl) {
+        passesEl.textContent = String(totalPasses);
+        if (totalPasses === 1) {
+          var img = document.getElementById("img-invitados");
+          if (img) {
+            img.src = "assets/02-invitados-singular.jpg";
+            img.alt = "Esta invitación fue creada especialmente para vos. Tenés 1 lugar reservado";
+          }
+          passesEl.classList.add("guest-places--singular");
+        }
+      }
+
+      var confirmBtn = document.getElementById("boton-confirmar");
+      if (confirmBtn && invite.event_slug) {
+        confirmBtn.href = RSVP_BASE + "/r/" + encodeURIComponent(invite.event_slug) + "?invite=" + encodeURIComponent(token);
+      }
+    } catch (_error) {
+      return;
+    }
+  }
+
+  initInvitation();
+})();
+</script>
+</body>
+</html>
