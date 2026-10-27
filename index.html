@@ -227,6 +227,109 @@
   .intro .lienzo img { width: 100%; height: 100%; display: block; }
   body.con-intro { overflow: hidden; }
 
+  /* Apertura tipo telón: la intro está duplicada en dos mitades que se corren a los costados */
+  .intro .hoja {
+    position: absolute; inset: 0;
+    transition: transform 1.3s cubic-bezier(.7, 0, .25, 1);
+  }
+  .intro .hoja.izq { clip-path: inset(0 50% 0 0); }
+  .intro .hoja.der { clip-path: inset(0 0 0 50%); }
+  .intro .hoja::after {
+    content: "";
+    position: absolute; top: 0; bottom: 0; left: 50%;
+    width: 18px;
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .intro .hoja.izq::after { transform: translateX(-100%); background: linear-gradient(to left, rgba(0,0,0,.28), transparent); }
+  .intro .hoja.der::after { background: linear-gradient(to right, rgba(0,0,0,.28), transparent); }
+  .intro .botones { position: absolute; inset: 0; transition: opacity .3s; }
+  .intro.abriendo { background: transparent; }
+  .intro.abriendo .hoja::after { opacity: 1; }
+  .intro.abriendo .hoja.izq { transform: translateX(-100%); }
+  .intro.abriendo .hoja.der { transform: translateX(100%); }
+  .intro.abriendo .botones { opacity: 0; pointer-events: none; }
+
+  /* Pétalos que caen al confirmar asistencia */
+  .petalo {
+    position: fixed;
+    top: 0;
+    z-index: 90;
+    height: auto;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,.25));
+    will-change: transform;
+  }
+
+  /* Ondas doradas al tocar un botón */
+  .hot { overflow: hidden; }
+  .onda {
+    position: absolute;
+    width: 20px; height: 20px;
+    margin: -10px 0 0 -10px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(214,178,104,.55) 0%, rgba(214,178,104,.25) 45%, rgba(214,178,104,0) 70%);
+    pointer-events: none;
+    animation: onda .7s ease-out forwards;
+  }
+  @keyframes onda {
+    from { transform: scale(0); opacity: 1; }
+    to   { transform: scale(18); opacity: 0; }
+  }
+
+  /* Latido del corazón del 19 (recorte del corazón de la pieza, superpuesto exacto) */
+  .pieza > img.corazon {
+    position: absolute;
+    left: 66.95%; top: 50.48%;
+    width: 11.69%; height: auto;
+    transform-origin: 50% 55%;
+    animation: latido 2.4s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes latido {
+    0%, 40%, 100% { transform: scale(1);    filter: drop-shadow(0 0 0 rgba(74,82,50,0)); }
+    10%           { transform: scale(1.14); filter: drop-shadow(0 0 1.2cqw rgba(74,82,50,.45)); }
+    20%           { transform: scale(1.02); }
+    30%           { transform: scale(1.09); filter: drop-shadow(0 0 .8cqw rgba(74,82,50,.3)); }
+  }
+
+  /* Números de la cuenta regresiva: entran con un fundido suave al cambiar */
+  .cd.cambia { animation: cambia .5s ease-out; }
+  @keyframes cambia {
+    from { opacity: 0; transform: translateX(-50%) translateY(-22%); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+  }
+
+  /* Luz que recorre el cordón: brillo enmascarado con la forma exacta del cordón de la pieza */
+  .cordon-luz {
+    position: absolute;
+    left: 0; width: 100%;
+    top: 44.14%; height: 8.37%;
+    pointer-events: none;
+    filter: drop-shadow(0 0 .8cqw rgba(255,236,190,.85)) drop-shadow(0 0 2cqw rgba(255,226,160,.45));
+  }
+  .cordon-luz span {
+    position: absolute; inset: 0;
+    -webkit-mask: url("assets/cordon-mascara.png") center / 100% 100% no-repeat;
+    mask: url("assets/cordon-mascara.png") center / 100% 100% no-repeat;
+    background: linear-gradient(90deg,
+      rgba(255,250,232,0) 0%, rgba(255,250,232,0) 44%,
+      rgba(255,252,240,1) 50%,
+      rgba(255,250,232,0) 56%, rgba(255,250,232,0) 100%);
+    background-size: 200% 100%;
+    background-repeat: no-repeat;
+    animation: luz-cordon 5s ease-in-out infinite;
+  }
+  @keyframes luz-cordon {
+    0%        { background-position: 100% 0; }
+    65%, 100% { background-position: 0% 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .corazon, .cordon-luz span, .cd.cambia { animation: none; }
+    .cordon-luz { display: none; }
+  }
+
   /* Botón flotante de música */
   .btn-musica {
     position: fixed;
@@ -304,12 +407,15 @@
 
 <!-- Intro -->
 <div class="intro" id="intro">
-  <div class="lienzo">
-    <img src="assets/00-intro.jpg" alt="Lara & Jonatan">
-    <button class="hot" id="entrarConMusica" aria-label="Entrar con música"
-       style="left:19.2%; top:51.1%; width:61.6%; height:5.6%"></button>
-    <button class="hot" id="entrarSinMusica" aria-label="Entrar sin música"
-       style="left:19.2%; top:58.8%; width:61.6%; height:5.6%"></button>
+  <div class="hoja izq"><div class="lienzo"><img src="assets/00-intro.jpg" alt="Lara & Jonatan"></div></div>
+  <div class="hoja der"><div class="lienzo"><img src="assets/00-intro.jpg" alt=""></div></div>
+  <div class="botones">
+    <div class="lienzo">
+      <button class="hot" id="entrarConMusica" aria-label="Entrar con música"
+         style="left:19.2%; top:51.1%; width:61.6%; height:5.6%"></button>
+      <button class="hot" id="entrarSinMusica" aria-label="Entrar sin música"
+         style="left:19.2%; top:58.8%; width:61.6%; height:5.6%"></button>
+    </div>
   </div>
 </div>
 
@@ -333,11 +439,13 @@
   <!-- 3. Versículo -->
   <section class="pieza">
     <img src="assets/03-versiculo.jpg" alt="Eclesiastés 4:12" loading="lazy">
+    <div class="cordon-luz" aria-hidden="true"><span></span></div>
   </section>
 
   <!-- 4. Día y cuenta regresiva -->
   <section class="pieza">
     <img src="assets/04-fecha.jpg" alt="Sábado 19 de diciembre de 2026" loading="lazy">
+    <img class="corazon" src="assets/corazon-19.png" alt="" aria-hidden="true">
     <div class="cd" style="left:20.9%" id="cdDias">0</div>
     <div class="cd" style="left:40.1%" id="cdHoras">0</div>
     <div class="cd" style="left:59.8%" id="cdMin">0</div>
@@ -473,10 +581,18 @@
     const h = Math.floor(diff / 3600);  diff -= h * 3600;
     const m = Math.floor(diff / 60);
     const s = Math.floor(diff - m * 60);
-    cd.d.textContent = d;
-    cd.h.textContent = String(h).padStart(2, '0');
-    cd.m.textContent = String(m).padStart(2, '0');
-    cd.s.textContent = String(s).padStart(2, '0');
+    poner(cd.d, String(d));
+    poner(cd.h, String(h).padStart(2, '0'));
+    poner(cd.m, String(m).padStart(2, '0'));
+    poner(cd.s, String(s).padStart(2, '0'));
+  }
+  // solo anima el número que cambió
+  function poner(el, valor) {
+    if (el.textContent === valor) return;
+    el.textContent = valor;
+    el.classList.remove('cambia');
+    void el.offsetWidth;
+    el.classList.add('cambia');
   }
   tick();
   setInterval(tick, 1000);
@@ -509,12 +625,59 @@
     setTimeout(() => toast.classList.remove('visible'), 1800);
   });
 
+  // ===== Ondas al tocar botones =====
+  document.querySelectorAll('.hot').forEach(b => b.addEventListener('pointerdown', e => {
+    const r = b.getBoundingClientRect();
+    const o = document.createElement('span');
+    o.className = 'onda';
+    o.style.left = (e.clientX - r.left) + 'px';
+    o.style.top = (e.clientY - r.top) + 'px';
+    b.appendChild(o);
+    setTimeout(() => o.remove(), 750);
+  }));
+
+  // ===== Lluvia de pétalos al confirmar asistencia =====
+  // Florcitas recortadas de la paniculata (assets/petalo-*.png). Caen ~1,5 s y después abre el formulario.
+  const PETALOS = [1, 2, 3, 4, 5, 6].map(n => `assets/petalo-${n}.png`);
+  PETALOS.forEach(src => { new Image().src = src; });
+  function lluviaDePetalos(cantidad) {
+    const reducir = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducir) return;
+    for (let i = 0; i < cantidad; i++) {
+      const p = document.createElement('img');
+      p.className = 'petalo';
+      p.src = PETALOS[i % PETALOS.length];
+      p.alt = '';
+      const tam = 14 + Math.random() * 16;
+      p.style.width = tam + 'px';
+      p.style.left = (Math.random() * 100) + 'vw';
+      document.body.appendChild(p);
+      const deriva = (Math.random() - 0.5) * 120;
+      const giro = (Math.random() - 0.5) * 540;
+      const dur = 2600 + Math.random() * 1800;
+      p.animate([
+        { transform: 'translate(0, -8vh) rotate(0deg)', opacity: 0 },
+        { opacity: 1, offset: 0.08 },
+        { transform: `translate(${deriva * 0.5}px, 45vh) rotate(${giro * 0.5}deg)`, offset: 0.5 },
+        { transform: `translate(${deriva}px, 108vh) rotate(${giro}deg)`, opacity: 0.9 }
+      ], { duration: dur, delay: Math.random() * 600, easing: 'cubic-bezier(.35,.1,.6,1)', fill: 'both' })
+        .finished.then(() => p.remove());
+    }
+  }
+  document.getElementById('boton-confirmar').addEventListener('click', e => {
+    const link = e.currentTarget.getAttribute('href');
+    e.preventDefault();
+    lluviaDePetalos(36);
+    if (link && link !== '#') setTimeout(() => { location.href = link; }, 1500);
+  });
+
   // ===== Intro y música =====
   const intro = document.getElementById('intro');
   const audio = document.getElementById('musica');
   const btnMusica = document.getElementById('btnMusica');
   function entrar(conMusica) {
-    intro.classList.add('oculta');
+    intro.classList.add('abriendo');
+    setTimeout(() => intro.classList.add('oculta'), 1300);
     document.body.classList.remove('con-intro');
     window.scrollTo(0, 0);
     if (conMusica) {
