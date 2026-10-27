@@ -4,10 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lara &amp; Jonatan</title>
-<meta name="description" content="Lara & Jonatan · 19 de diciembre de 2026 · ¡Nos casamos!">
-<meta property="og:title" content="Lara & Jonatan · Nos casamos">
-<meta property="og:description" content="19 de diciembre de 2026">
-<meta property="og:image" content="assets/01-portada.jpg">
+<meta name="description" content="Queremos compartir con vos uno de los días más felices de nuestras vidas. Te esperamos el 19 de diciembre de 2026 🤍">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nadulog.github.io/Boda-Lara-y-Jonatan-/">
+<meta property="og:title" content="Lara & Jonatan · ¡Nos casamos!">
+<meta property="og:description" content="Queremos compartir con vos uno de los días más felices de nuestras vidas. Te esperamos el 19 de diciembre de 2026 🤍">
+<meta property="og:image" content="https://nadulog.github.io/Boda-Lara-y-Jonatan-/assets/og-preview.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="480">
+<meta property="og:image:alt" content="Lara & Jonatan · 19 de diciembre de 2026">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#4a5232">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -78,6 +84,25 @@
   }
   /* En la imagen singular ("lugar reservado") la línea está recentrada: el hueco se corre 34px */
   .inv-pases.guest-places--singular { left: 32.5%; }
+
+  /* Firma del footer (el texto se borró de la imagen y va como texto) */
+  .firma {
+    position: absolute;
+    left: 0; right: 0;
+    top: 38.4%;
+    text-align: center;
+    line-height: 1;
+    font-size: 2.5cqw;
+    letter-spacing: .04em;
+    color: #4f5435;
+    white-space: nowrap;
+  }
+  .firma em {
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.42em;
+    letter-spacing: 0;
+  }
 
   /* Cuenta regresiva */
   .cd {
@@ -382,12 +407,13 @@
 
   <!-- Footer -->
   <footer class="pieza">
-    <img src="assets/12-footer.jpg" alt="Hecho con amor por Bloomday" loading="lazy">
-    <a class="hot" data-link="whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp Bloomday"
+    <img src="assets/12-footer.jpg" alt="" loading="lazy">
+    <p class="firma">Hecho con amor por <em>Bloomdate</em></p>
+    <a class="hot" data-link="whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp Bloomdate"
        style="left:41.8%; top:50%; width:4.8%; height:18%"></a>
-    <a class="hot" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram Bloomday"
+    <a class="hot" data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram Bloomdate"
        style="left:47.7%; top:50%; width:4.8%; height:18%"></a>
-    <a class="hot" data-link="web" target="_blank" rel="noopener" aria-label="Web Bloomday"
+    <a class="hot" data-link="web" target="_blank" rel="noopener" aria-label="Web Bloomdate"
        style="left:53.7%; top:50%; width:4.8%; height:18%"></a>
   </footer>
 
@@ -424,9 +450,9 @@
     musica:      'https://open.spotify.com/playlist/33gY95I8ZwTGIs8Xq97PP7',
     bloomkeep:   'https://app.bloomkeep.site/boda-lara-jonatan',
     rsvp:        '#',  // se reemplaza por el link personalizado cuando llega ?invite=<token>
-    whatsapp:    '#',  // TODO: WhatsApp Bloomday
-    instagram:   '#',  // TODO: Instagram Bloomday
-    web:         '#'   // TODO: web Bloomday
+    whatsapp:    'https://wa.me/541140436324',
+    instagram:   'https://www.instagram.com/bloomdate.invitaciones/',
+    web:         'https://bloomdate-site.netlify.app/'
   };
 
   document.querySelectorAll('[data-link]').forEach(a => {
